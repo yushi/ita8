@@ -45,7 +45,7 @@ func ita8copy() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	println(string(b))
+	fmt.Print(string(b))
 }
 
 func ita8paste() {
@@ -57,7 +57,7 @@ func ita8paste() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	println(string(b))
+	fmt.Print(string(b))
 }
 
 func main() {
