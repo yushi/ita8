@@ -13,6 +13,8 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+
+	"github.com/yushi/ita8"
 )
 
 func pbpaste() ([]byte, error) {
@@ -122,6 +124,9 @@ func main() {
 		log.Fatal("ssh for ita8br closed.")
 	}()
 
-	http.HandleFunc("/", getClipboardHandler(remoteAddr))
+	http.HandleFunc(
+		fmt.Sprintf("/%s", ita8.ClipboardPath),
+		getClipboardHandler(remoteAddr),
+	)
 	log.Fatal(http.ListenAndServe(":4567", nil))
 }

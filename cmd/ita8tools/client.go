@@ -7,10 +7,16 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/yushi/ita8"
+)
+
+var (
+	clipboardPath = "clipboard"
 )
 
 func ita8paste() {
-	_, body, err := req("GET", nil)
+	_, body, err := req(ita8.ClipboardPath, "GET", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -18,16 +24,16 @@ func ita8paste() {
 }
 
 func ita8copy() {
-	_, body, err := req("PUT", os.Stdin)
+	_, body, err := req(ita8.ClipboardPath, "PUT", os.Stdin)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Print(body)
 }
 
-func req(method string, r io.Reader) (resp *http.Response, body string, err error) {
+func req(path, method string, r io.Reader) (resp *http.Response, body string, err error) {
 	client := &http.Client{}
-	req, err := http.NewRequest(method, "http://127.0.0.1:4567/", r)
+	req, err := http.NewRequest(method, fmt.Sprintf("http://127.0.0.1:4567/%s", path), r)
 	if err != nil {
 		return
 	}
