@@ -36,10 +36,6 @@ func req(method string, r io.Reader) (resp *http.Response, body string, err erro
 		return
 	}
 
-	if r == nil {
-		return
-	}
-
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return
