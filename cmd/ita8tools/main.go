@@ -42,5 +42,7 @@ func main() {
 		ita8copy()
 	} else if strings.HasSuffix(os.Args[0], "paste") {
 		ita8paste()
+	} else if strings.HasSuffix(os.Args[0], "open") {
+		ita8open(os.Args[1:])
 	}
 }

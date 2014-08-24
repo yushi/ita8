@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -14,6 +16,17 @@ import (
 var (
 	clipboardPath = "clipboard"
 )
+
+func ita8open(args []string) {
+	b, err := json.Marshal(args)
+	if err != nil {
+		log.Fatal(err)
+	}
+	r := bytes.NewReader(b)
+	if _, _, err := req(ita8.OpenPath, "POST", r); err != nil {
+		log.Fatal(err)
+	}
+}
 
 func ita8paste() {
 	_, body, err := req(ita8.ClipboardPath, "GET", nil)
