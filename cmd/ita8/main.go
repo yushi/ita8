@@ -30,32 +30,44 @@ func pbcopy(in []byte) error {
 	return err
 }
 
-func clipboardHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "GET":
-		b, err := pbpaste()
-		if err != nil {
-			w.WriteHeader(500)
-		} else {
-			w.WriteHeader(200)
+func checkRemoteAddr(r *http.Request, allowed string) bool {
+	addrs := strings.Split(":", r.RemoteAddr)
+	return addrs[0] == allowed
+}
+
+func getClipboardHandler(remoteAddr string) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if checkRemoteAddr(r, remoteAddr) {
+			w.WriteHeader(401)
+			return
 		}
-		w.Write(b)
-	case "PUT":
-		defer r.Body.Close()
-		b, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			log.Println(err)
-			w.WriteHeader(500)
+
+		switch r.Method {
+		case "GET":
+			b, err := pbpaste()
+			if err != nil {
+				w.WriteHeader(500)
+			} else {
+				w.WriteHeader(200)
+			}
+			w.Write(b)
+		case "PUT":
+			defer r.Body.Close()
+			b, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				log.Println(err)
+				w.WriteHeader(500)
+			}
+			err = pbcopy(b)
+			if err != nil {
+				log.Println(err)
+				w.WriteHeader(500)
+			} else {
+				w.WriteHeader(200)
+			}
+		default:
+			w.WriteHeader(405)
 		}
-		err = pbcopy(b)
-		if err != nil {
-			log.Println(err)
-			w.WriteHeader(500)
-		} else {
-			w.WriteHeader(200)
-		}
-	default:
-		w.WriteHeader(405)
 	}
 }
 
@@ -110,6 +122,6 @@ func main() {
 		log.Fatal("ssh for ita8br closed.")
 	}()
 
-	http.HandleFunc("/", clipboardHandler)
+	http.HandleFunc("/", getClipboardHandler(remoteAddr))
 	log.Fatal(http.ListenAndServe(":4567", nil))
 }
