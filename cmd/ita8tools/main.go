@@ -38,9 +38,9 @@ func ita8br() {
 func main() {
 	if strings.HasSuffix(os.Args[0], "ita8br") {
 		ita8br()
-	} else if strings.HasSuffix(os.Args[0], "ita8copy") {
+	} else if strings.HasSuffix(os.Args[0], "copy") {
 		ita8copy()
-	} else if strings.HasSuffix(os.Args[0], "ita8paste") {
+	} else if strings.HasSuffix(os.Args[0], "paste") {
 		ita8paste()
 	}
 }
