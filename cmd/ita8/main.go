@@ -40,7 +40,7 @@ func clipboardHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(200)
 		}
 		w.Write(b)
-	case "POST":
+	case "PUT":
 		defer r.Body.Close()
 		b, err := ioutil.ReadAll(r.Body)
 		if err != nil {

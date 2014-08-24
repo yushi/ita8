@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -34,30 +33,6 @@ func ita8br() {
 		Handler: proxyHandler,
 	}
 	log.Fatal(server.ListenAndServe())
-}
-
-func ita8copy() {
-	resp, err := http.Post("http://127.0.0.1:4567/", "text/plain", os.Stdin)
-	if err != nil {
-		log.Fatal(err)
-	}
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Print(string(b))
-}
-
-func ita8paste() {
-	resp, err := http.Get("http://127.0.0.1:4567/")
-	if err != nil {
-		log.Fatal(err)
-	}
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Print(string(b))
 }
 
 func main() {
