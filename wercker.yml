@@ -10,7 +10,7 @@ build:
         code: cd cmd/ita8tools && GOOS=linux GOARCH=amd64 go build && gzip ita8tools && cp ita8tools.gz $WERCKER_OUTPUT_DIR
     - script:
         name: output release tag
-        code: git describe --tags --exact --match 'v*' > $WERCKER_OUTPUT_DIR/.release_tag || true
+        code: git describe --tags --exact > $WERCKER_OUTPUT_DIR/.release_tag || true
 deploy:
   steps:
     - script:
@@ -22,7 +22,7 @@ deploy:
         tag: $RELEASE_TAG
     - wercker/github-upload-asset:
         token: $GITHUB_TOKEN
-        file: snapshot/ita8.gz
+        file: ita8.gz
     - wercker/github-upload-asset:
         token: $GITHUB_TOKEN
-        file: snapshot/ita8tools.gz
+        file: ita8tools.gz
